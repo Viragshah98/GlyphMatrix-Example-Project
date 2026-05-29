@@ -106,13 +106,13 @@
             </intent-filter>
             <meta-data
                 android:name="com.nothing.glyph.toy.name"
-                android:value="Sharingan" />
+                android:resource="@string/toy_name_sharingan" />
             <meta-data
                 android:name="com.nothing.glyph.toy.image"
                 android:resource="@drawable/img1" />
             <meta-data
                 android:name="com.nothing.glyph.toy.summary"
-                android:value="Sharingan Glyph Animation" />
+                android:resource="@string/toy_summary_sharingan" />
             <meta-data
                 android:name="com.nothing.glyph.toy.longpress"
                 android:value="1" />
