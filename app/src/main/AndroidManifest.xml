@@ -26,7 +26,6 @@
             android:theme="@style/Theme.NothingAndroidSDKDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -39,7 +38,6 @@
             <intent-filter>
                 <action android:name="com.nothing.glyph.TOY" />
             </intent-filter>
-
             <meta-data
                 android:name="com.nothing.glyph.toy.name"
                 android:resource="@string/toy_name_basic" />
@@ -62,7 +60,6 @@
             <intent-filter>
                 <action android:name="com.nothing.glyph.TOY" />
             </intent-filter>
-
             <meta-data
                 android:name="com.nothing.glyph.toy.name"
                 android:resource="@string/toy_name_animation" />
@@ -85,7 +82,6 @@
             <intent-filter>
                 <action android:name="com.nothing.glyph.TOY" />
             </intent-filter>
-
             <meta-data
                 android:name="com.nothing.glyph.toy.name"
                 android:resource="@string/toy_name_glyph_button" />
@@ -95,6 +91,28 @@
             <meta-data
                 android:name="com.nothing.glyph.toy.summary"
                 android:resource="@string/toy_summary_glyph_button" />
+            <meta-data
+                android:name="com.nothing.glyph.toy.longpress"
+                android:value="1" />
+        </service>
+
+        <!-- Sharingan Lottie Service -->
+        <service
+            android:name=".demos.animation.LottieAnimationService"
+            android:exported="true"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.nothing.glyph.TOY" />
+            </intent-filter>
+            <meta-data
+                android:name="com.nothing.glyph.toy.name"
+                android:value="Sharingan" />
+            <meta-data
+                android:name="com.nothing.glyph.toy.image"
+                android:resource="@drawable/img1" />
+            <meta-data
+                android:name="com.nothing.glyph.toy.summary"
+                android:value="Sharingan Glyph Animation" />
             <meta-data
                 android:name="com.nothing.glyph.toy.longpress"
                 android:value="1" />
