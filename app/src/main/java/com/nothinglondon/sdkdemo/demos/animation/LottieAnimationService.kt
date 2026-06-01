@@ -72,7 +72,7 @@ class LottieAnimationService : GlyphMatrixService("Sharingan") {
                                 val gray = (Color.red(pixel) * 0.299 +
                                         Color.green(pixel) * 0.587 +
                                         Color.blue(pixel) * 0.114).toInt()
-                                arr[row * 25 + col] = gray
+                                arr[row * 25 + col] = minOf((gray * 1.5).toInt(), 255)
                             }
                         }
                         result.add(arr)
