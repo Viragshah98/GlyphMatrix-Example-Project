@@ -1,10 +1,6 @@
 package com.nothinglondon.sdkdemo.demos.animation
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.util.Base64
 import android.util.Log
 import com.nothing.ketchum.GlyphMatrixManager
 import com.nothinglondon.sdkdemo.demos.GlyphMatrixService
@@ -28,18 +24,18 @@ class LottieAnimationService : GlyphMatrixService("Sharingan") {
         backgroundScope.launch {
             val frames = loadFrames(context)
             if (frames.isEmpty()) {
-                Log.e("LottieService", "No frames loaded!")
+                Log.e("Sharingan", "No frames loaded!")
                 return@launch
             }
-            Log.d("LottieService", "Loaded ${frames.size} frames")
+            Log.d("Sharingan", "Loaded ${frames.size} frames")
             while (isActive) {
-                for (frame in frames) {
+                for ((pixels, duration) in frames) {
                     if (!isActive) break
-                    val frameData = frame
+                    val data = pixels
                     uiScope.launch {
-                        glyphMatrixManager.setMatrixFrame(frameData)
+                        glyphMatrixManager.setMatrixFrame(data)
                     }
-                    delay(100)
+                    delay(duration)
                 }
             }
         }
@@ -49,38 +45,25 @@ class LottieAnimationService : GlyphMatrixService("Sharingan") {
         backgroundScope.cancel()
     }
 
-    private fun loadFrames(context: Context): List<IntArray> {
-        val result = mutableListOf<IntArray>()
+    private fun loadFrames(context: Context): List<Pair<IntArray, Long>> {
+        val result = mutableListOf<Pair<IntArray, Long>>()
         try {
             val json = context.assets.open("animation.json")
                 .bufferedReader().use { it.readText() }
             val root = JSONObject(json)
-            val assets = root.getJSONArray("assets")
-            for (i in 0 until assets.length()) {
-                val asset = assets.getJSONObject(i)
-                val p = asset.optString("p", "")
-                if (p.startsWith("data:image/png;base64,")) {
-                    val b64 = p.removePrefix("data:image/png;base64,")
-                    val bytes = Base64.decode(b64, Base64.DEFAULT)
-                    val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                    if (bmp != null) {
-                        val scaled = Bitmap.createScaledBitmap(bmp, 25, 25, true)
-                        val arr = IntArray(625)
-                        for (row in 0 until 25) {
-                            for (col in 0 until 25) {
-                                val pixel = scaled.getPixel(col, row)
-                                val gray = (Color.red(pixel) * 0.299 +
-                                        Color.green(pixel) * 0.587 +
-                                        Color.blue(pixel) * 0.114).toInt()
-                                arr[row * 25 + col] = minOf((gray * 1.5).toInt(), 255)
-                            }
-                        }
-                        result.add(arr)
-                    }
+            val frames = root.getJSONArray("frames")
+            for (i in 0 until frames.length()) {
+                val frame = frames.getJSONObject(i)
+                val duration = frame.optLong("d", 100)
+                val pArray = frame.getJSONArray("p")
+                val pixels = IntArray(pArray.length()) { idx ->
+                    val raw = pArray.getInt(idx)
+                    if (raw > 0) minOf((raw * 255 / 146), 255) else 0
                 }
+                result.add(Pair(pixels, duration))
             }
         } catch (e: Exception) {
-            Log.e("LottieService", "Error: ${e.message}")
+            Log.e("Sharingan", "Error loading frames: ${e.message}")
         }
         return result
     }
